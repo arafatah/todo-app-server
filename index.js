@@ -31,6 +31,22 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const todoCollection = client.db("todo").collection("todos");
+    
+
+    // Create a single new todo
+    app.post("/todos", async (req, res) => {
+      const newTodo = req.body;
+      const result = await todoCollection.insertOne(newTodo);
+      console.log("Got a POST request for the homepage");
+      res.json(result);
+    });
+
+    app.get("/todos", async (req, res) => {
+      const cursor = todoCollection.find({});
+      const todos = await cursor.toArray();
+      res.json(todos);
+    });
 
 
     // Send a ping to confirm a successful connection
